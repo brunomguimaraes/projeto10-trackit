@@ -11,8 +11,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path="/">
+        <Route exact path="/">
             <Login />
+        </Route>
+        <Route exact path="/register">
+            <Registration />
         </Route>
       </Switch>
     </BrowserRouter>

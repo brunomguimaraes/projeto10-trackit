@@ -123,8 +123,13 @@ table {
   border-spacing: 0;
 }
 
-a:not([class]) {
-  text-decoration-skip-ink: auto;
+a:link, a:visited, a:hover, a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+input {
+  border: none;
 }
 
 *,

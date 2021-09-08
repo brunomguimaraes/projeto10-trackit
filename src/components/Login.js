@@ -1,18 +1,23 @@
 import React from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   return (
     <Container>
-      <Logo src={logo} alt="logo-image" />
-      <Title>TrackIt</Title>
+      <Link to="/">
+        <Logo src={logo} alt="logo-image" />
+        <Title>TrackIt</Title>
+      </Link>
       <Form>
         <input type="text" placeholder="email"></input>
         <input type="text" placeholder="senha"></input>
       </Form>
       <EnterButton>Entrar</EnterButton>
-      <Register>Não tem uma conta? Cadastre-se!</Register>
+      <Link to="/register">
+        <Register>Não tem uma conta? Cadastre-se!</Register>
+      </Link>
     </Container>
   );
 }
@@ -25,6 +30,7 @@ const Container = styled.div`
   justify-content: center;
   margin-top: 60px;
 `;
+
 const Title = styled.div`
   font-family: "Playball", cursive;
   font-size: 69px;
