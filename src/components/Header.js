@@ -19,9 +19,11 @@ const HeaderContainer = styled.div`
   background-color: #126ba5;
   display: flex;
   justify-content: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1;
 `;
 
 const HeaderBox = styled.div`
@@ -30,7 +32,6 @@ const HeaderBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
 `;
 
 const Title = styled.div`
