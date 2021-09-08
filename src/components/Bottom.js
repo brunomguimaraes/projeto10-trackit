@@ -1,13 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export default function Bottom() {
   return (
     <BottomContainer>
       <BottomBox>
-        <Habits>Hábitos</Habits>
+        <Link to="/habits">
+          <Habits>Hábitos</Habits>
+        </Link>
         <Today>Hoje</Today>
-        <History>Histórico</History>
+        <Link to="/history">
+          <History>Histórico</History>
+        </Link>
       </BottomBox>
     </BottomContainer>
   );

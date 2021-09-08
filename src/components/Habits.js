@@ -72,6 +72,7 @@ export default function Habits() {
 const HabitsContainer = styled.div`
   background-color: #f2f2f2;
   width: 100%;
+  height: calc(100vh - 140px);
   margin-top: 70px;
   margin-bottom: 70px;
 `;

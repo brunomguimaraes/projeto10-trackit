@@ -2,9 +2,8 @@ import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import "../css/reset.css";
-import Bottom from "./Bottom";
 import Habits from "./Habits";
-import Header from "./Header";
+import History from "./History";
 import Login from "./Login";
 import Registration from "./Registration";
 
@@ -21,6 +20,9 @@ export default function App() {
         </Route>
         <Route exact path="/habits">
             <Habits />
+        </Route>
+        <Route exact path="/history">
+            <History />
         </Route>
       </Switch>
     </BrowserRouter>

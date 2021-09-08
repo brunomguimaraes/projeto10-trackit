@@ -27,7 +27,7 @@ const HeaderContainer = styled.div`
 `;
 
 const HeaderBox = styled.div`
-  width: 340px;
+  width: calc((100vw - 36px));
   height: 70px;
   display: flex;
   align-items: center;
