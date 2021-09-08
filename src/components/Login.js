@@ -14,7 +14,9 @@ export default function Login() {
         <input type="text" placeholder="email"></input>
         <input type="text" placeholder="senha"></input>
       </Form>
+      <Link to="/habits">
       <EnterButton>Entrar</EnterButton>
+      </Link>
       <Link to="/register">
         <Register>Não tem uma conta? Cadastre-se!</Register>
       </Link>
