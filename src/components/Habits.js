@@ -36,6 +36,19 @@ export default function Habits() {
               <Save>Salvar</Save>
             </Buttons>
           </HabitCreationBox>
+          <SingleHabitBox>
+            <Icon><ion-icon name="trash-outline"></ion-icon></Icon>
+            <Name>Ler 1 capítulo de livro</Name>
+            <HabitWeekdays>
+              <Day7>D</Day7>
+              <Day1>S</Day1>
+              <Day2>T</Day2>
+              <Day3>Q</Day3>
+              <Day4>Q</Day4>
+              <Day5>S</Day5>
+              <Day6>S</Day6>
+            </HabitWeekdays>
+          </SingleHabitBox>
           <DefaultMessage>
             Você não tem nenhum hábito cadastrado ainda. Adicone um hábito para
             começar a trackear!
@@ -103,7 +116,7 @@ const HabitCreationBox = styled.div`
   border-radius: 5px;
   background-color: #ffffff;
   margin-top: 20px;
-  display: ${1 > 2 ? 'inherit' : 'none'};
+  display: ${1 > 0 ? 'inherit' : 'none'};
 `;
 
 const HabitNameInput = styled.input`
@@ -119,6 +132,10 @@ const HabitNameInput = styled.input`
   ::placeholder {
     color: #dbdbdb;
   }
+
+  :focus{
+    outline: none;
+  }
 `;
 
 const Weekdays = styled.div`
@@ -127,6 +144,8 @@ const Weekdays = styled.div`
   justify-content: flex-start;
   margin: 0 auto;
 `;
+
+const HabitWeekdays = Weekdays;
 
 const Day1 = styled.div`
   color: #dbdbdb;
@@ -174,7 +193,6 @@ const Cancel = styled.button`
 
   :hover {
     cursor: pointer;
-    background-color: #cfcfcf;
     color: red;
   }
 `;
@@ -191,3 +209,35 @@ const Save = styled.button`
     filter: brightness(108%);
   }
 `;
+
+const SingleHabitBox = styled.div`
+  width: calc((100vw - 36px));
+  height: 91px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: ${1 > 0 ? 'inherit' : 'none'};
+  position: relative;
+`
+const Name = styled.p`
+  color: #666666;
+  font-size: 20px;
+  line-height: 25px;
+  padding-left: 18px;
+  margin-bottom: 8px;
+  padding-top: 13px;
+`
+
+const Icon = styled.div`
+  width: 13px;
+  height: 13px;
+  background-color: #FFFFFF;
+  position: absolute;
+  top: 11px;
+  right: 10px;
+
+  :hover{
+    cursor: pointer;
+  }
+`
