@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
-import { postSignUp } from "../services/API"
-
-
+import { postSignUp } from "../services/API";
 
 export default function SignUp() {
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [picture, setPicture] = useState("");
@@ -17,14 +15,13 @@ export default function SignUp() {
       email,
       password,
       name,
-      picture
-    }
+      picture,
+    };
 
-    postSignUp(body)
-    .then(res => console.log(res.data))
-}
+    postSignUp(body).then((res) => console.log(res.data));
+  }
 
-  console.log(email)
+  console.log(email);
 
   return (
     <Container>
@@ -33,10 +30,30 @@ export default function SignUp() {
         <Title>TrackIt</Title>
       </Link>
       <Form>
-        <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email}></input>
-        <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value={password}></input>
-        <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value={name}></input>
-        <input type="text" placeholder="foto" onChange={(e) => setPicture(e.target.value)} value={picture}></input>
+        <Email
+          type="text"
+          placeholder="email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        ></Email>
+        <Password
+          type="password"
+          placeholder="senha"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        ></Password>
+        <Name
+          type="text"
+          placeholder="nome"
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+        ></Name>
+        <Picture
+          type="text"
+          placeholder="foto"
+          onChange={(e) => setPicture(e.target.value)}
+          value={picture}
+        ></Picture>
       </Form>
       <RegisterButton onClick={CreateUser}>Cadastrar</RegisterButton>
       <Link to="/">
@@ -70,18 +87,33 @@ const Logo = styled.img`
 const Form = styled.div`
   width: 303px;
   margin: 0 auto;
+`;
 
-  input {
-    width: 303px;
-    height: 45px;
-    font-family: "Lexend Deca", sans-serif;
-    font-size: 20px;
-    border: 1px solid #dbdbdb;
-    border-radius: 5px;
-    margin-top: 6px;
-    padding-left: 11px;
+const Email = styled.input`
+  width: 303px;
+  height: 45px;
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 20px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  margin-top: 6px;
+  padding-left: 11px;
+  color: #666666;
+
+  ::placeholder {
+    color: #dbdbdb;
+  }
+
+  :focus {
+    outline: none;
   }
 `;
+
+const Password = Email;
+
+const Name = Email;
+
+const Picture = Email;
 
 const RegisterButton = styled.button`
   width: 303px;

@@ -11,11 +11,11 @@ export default function Login() {
         <Title>TrackIt</Title>
       </Link>
       <Form>
-        <input type="text" placeholder="email"></input>
-        <input type="text" placeholder="senha"></input>
+        <Email type="text" placeholder="email"></Email>
+        <Password type="password" placeholder="senha"></Password>
       </Form>
       <Link to="/habits">
-      <EnterButton>Entrar</EnterButton>
+        <EnterButton>Entrar</EnterButton>
       </Link>
       <Link to="/sign-up">
         <Register>Não tem uma conta? Cadastre-se!</Register>
@@ -48,18 +48,31 @@ const Logo = styled.img`
 const Form = styled.div`
   width: 303px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+`;
 
-  input {
-    width: 303px;
-    height: 45px;
-    font-family: "Lexend Deca", sans-serif;
-    font-size: 20px;
-    border: 1px solid #dbdbdb;
-    border-radius: 5px;
-    margin-top: 6px;
-    padding-left: 11px;
+const Email = styled.input`
+  width: 303px;
+  height: 45px;
+  font-family: "Lexend Deca", sans-serif;
+  font-size: 20px;
+  border: 1px solid #dbdbdb;
+  border-radius: 5px;
+  margin-top: 6px;
+  padding-left: 11px;
+  color: #666666;
+
+  ::placeholder {
+    color: #dbdbdb;
+  }
+
+  :focus{
+    outline: none;
   }
 `;
+
+const Password = Email;
 
 const EnterButton = styled.button`
   width: 303px;

@@ -123,12 +123,16 @@ table {
   border-spacing: 0;
 }
 
-a:link, a:visited, a:hover, a:active {
+a:link,
+a:visited,
+a:hover,
+a:active {
   color: inherit;
   text-decoration: none;
 }
 
-input, button {
+input,
+button {
   border: none;
 }
 

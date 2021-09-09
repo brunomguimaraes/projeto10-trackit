@@ -7,22 +7,21 @@ import History from "./History";
 import Login from "./Login";
 import SignUp from "./SignUp";
 
-
 export default function App() {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-            <Login />
+          <Login />
         </Route>
         <Route exact path="/sign-up">
-            <SignUp />
+          <SignUp />
         </Route>
         <Route exact path="/habits">
-            <Habits />
+          <Habits />
         </Route>
         <Route exact path="/history">
-            <History />
+          <History />
         </Route>
       </Switch>
     </BrowserRouter>
