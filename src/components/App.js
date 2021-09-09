@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import "../css/reset.css";
 import Habits from "./Habits";
+import HabitsToday from "./HabitsToday";
 import History from "./History";
 import Login from "./Login";
 import SignUp from "./SignUp";
@@ -19,6 +20,9 @@ export default function App() {
         </Route>
         <Route exact path="/habits">
           <Habits />
+        </Route>
+        <Route exact path="/today">
+          <HabitsToday />
         </Route>
         <Route exact path="/history">
           <History />

@@ -9,7 +9,9 @@ export default function Bottom() {
         <Link to="/habits">
           <Habits>Hábitos</Habits>
         </Link>
-        <Today>Hoje</Today>
+        <Link to="/today">
+          <Today>Hoje</Today>
+        </Link>
         <Link to="/history">
           <History>Histórico</History>
         </Link>
