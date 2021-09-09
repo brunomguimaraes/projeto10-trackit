@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <Container>
       <Link to="/">
@@ -11,8 +14,18 @@ export default function Login() {
         <Title>TrackIt</Title>
       </Link>
       <Form>
-        <Email type="text" placeholder="email"></Email>
-        <Password type="password" placeholder="senha"></Password>
+        <Email
+          type="text"
+          placeholder="email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+        ></Email>
+        <Password
+          type="password"
+          placeholder="senha"
+          onChange={(e) => setPassword(e.target.value)}
+          value={password}
+        ></Password>
       </Form>
       <Link to="/habits">
         <EnterButton>Entrar</EnterButton>
@@ -67,7 +80,7 @@ const Email = styled.input`
     color: #dbdbdb;
   }
 
-  :focus{
+  :focus {
     outline: none;
   }
 `;
