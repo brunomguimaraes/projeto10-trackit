@@ -1,9 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
+import { postSignUp } from "../services/API"
 
-export default function Registration() {
+
+
+export default function SignUp() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [picture, setPicture] = useState("");
+
+  function CreateUser() {
+    const body = {
+      email,
+      password,
+      name,
+      picture
+    }
+
+    postSignUp(body)
+    .then(res => console.log(res.data))
+}
+
+  console.log(email)
+
   return (
     <Container>
       <Link to="/">
@@ -11,12 +33,12 @@ export default function Registration() {
         <Title>TrackIt</Title>
       </Link>
       <Form>
-        <input type="text" placeholder="email"></input>
-        <input type="text" placeholder="senha"></input>
-        <input type="text" placeholder="nome"></input>
-        <input type="text" placeholder="foto"></input>
+        <input type="text" placeholder="email" onChange={(e) => setEmail(e.target.value)} value={email}></input>
+        <input type="password" placeholder="senha" onChange={(e) => setPassword(e.target.value)} value={password}></input>
+        <input type="text" placeholder="nome" onChange={(e) => setName(e.target.value)} value={name}></input>
+        <input type="text" placeholder="foto" onChange={(e) => setPicture(e.target.value)} value={picture}></input>
       </Form>
-      <RegisterButton>Cadastrar</RegisterButton>
+      <RegisterButton onClick={CreateUser}>Cadastrar</RegisterButton>
       <Link to="/">
         <Login>Já tem uma conta? Faça login!</Login>
       </Link>

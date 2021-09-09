@@ -39,4 +39,5 @@ const DefaulMessage = styled.div`
     font-size: 18px;
     color: #666666;
     padding-left: 17px;
+    line-height: 23px;
 `

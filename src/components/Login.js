@@ -17,7 +17,7 @@ export default function Login() {
       <Link to="/habits">
       <EnterButton>Entrar</EnterButton>
       </Link>
-      <Link to="/register">
+      <Link to="/sign-up">
         <Register>Não tem uma conta? Cadastre-se!</Register>
       </Link>
     </Container>

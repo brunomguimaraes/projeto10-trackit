@@ -5,7 +5,7 @@ import "../css/reset.css";
 import Habits from "./Habits";
 import History from "./History";
 import Login from "./Login";
-import Registration from "./Registration";
+import SignUp from "./SignUp";
 
 
 export default function App() {
@@ -15,8 +15,8 @@ export default function App() {
         <Route exact path="/">
             <Login />
         </Route>
-        <Route exact path="/register">
-            <Registration />
+        <Route exact path="/sign-up">
+            <SignUp />
         </Route>
         <Route exact path="/habits">
             <Habits />
