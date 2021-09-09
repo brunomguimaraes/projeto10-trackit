@@ -1,27 +1,42 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { postSignUp } from "../services/API";
+import Loader from "react-loader-spinner";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [picture, setPicture] = useState("");
+  const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
 
   function CreateUser() {
+    setLoading(true);
+
     const body = {
       email,
       password,
       name,
-      picture,
+      image,
     };
 
-    postSignUp(body).then((res) => console.log(res.data));
+    postSignUp(body)
+      .then((res) => {
+        console.log("resposta da requisção", res.data);
+        setLoading(false);
+        history.push('/')
+      })
+      .catch((err) => {
+        alert(
+          "Falha ao criar seu cadastro. Por favor, preencha os dados novamente."
+        );
+        setLoading(false);
+      });
   }
-
-  console.log(email);
 
   return (
     <Container>
@@ -35,27 +50,43 @@ export default function SignUp() {
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
+          disabled={loading ? true : false}
         ></Email>
         <Password
           type="password"
           placeholder="senha"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
+          disabled={loading ? true : false}
         ></Password>
         <Name
           type="text"
           placeholder="nome"
           onChange={(e) => setName(e.target.value)}
           value={name}
+          disabled={loading ? true : false}
         ></Name>
-        <Picture
+        <Image
           type="text"
           placeholder="foto"
-          onChange={(e) => setPicture(e.target.value)}
-          value={picture}
-        ></Picture>
+          onChange={(e) => setImage(e.target.value)}
+          value={image}
+          disabled={loading ? true : false}
+        ></Image>
       </Form>
-      <RegisterButton onClick={CreateUser}>Cadastrar</RegisterButton>
+      <RegisterButton onClick={CreateUser} disabled={loading ? true : false}>
+        {loading ? (
+          <Loader
+            type="ThreeDots"
+            color="#ffffff"
+            height={80}
+            width={80}
+            timeout={5000}
+          />
+        ) : (
+          "Cadastrar"
+        )}
+      </RegisterButton>
       <Link to="/">
         <Login>Já tem uma conta? Faça login!</Login>
       </Link>
@@ -107,13 +138,17 @@ const Email = styled.input`
   :focus {
     outline: none;
   }
+
+  :disabled{
+    opacity: 0.5;
+  }
 `;
 
 const Password = Email;
 
 const Name = Email;
 
-const Picture = Email;
+const Image = Email;
 
 const RegisterButton = styled.button`
   width: 303px;
@@ -125,6 +160,13 @@ const RegisterButton = styled.button`
   margin: 6px 0 25px 0;
   font-size: 20px;
   font-family: "Lexend Deca", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :disabled{
+    opacity: 0.5;
+  }
 `;
 
 const Login = styled.p`
