@@ -26,15 +26,20 @@ export default function SignUp() {
 
     postSignUp(body)
       .then((res) => {
-        console.log("resposta da requisção", res.data);
+        console.log("resposta do sign up", res.data);
         setLoading(false);
-        history.push('/')
+        history.push("/");
+        alert("Seu cadastro foi realizado com sucesso!");
       })
       .catch((err) => {
         alert(
-          "Falha ao criar seu cadastro. Por favor, preencha os dados novamente."
+          "Ocorreu um erro ao criar seu cadastro. Por favor, preencha os dados novamente."
         );
         setLoading(false);
+        setEmail("");
+        setPassword("");
+        setName("");
+        setImage("");
       });
   }
 
@@ -139,7 +144,7 @@ const Email = styled.input`
     outline: none;
   }
 
-  :disabled{
+  :disabled {
     opacity: 0.5;
   }
 `;
@@ -164,7 +169,7 @@ const RegisterButton = styled.button`
   justify-content: center;
   align-items: center;
 
-  :disabled{
+  :disabled {
     opacity: 0.5;
   }
 `;

@@ -1,12 +1,40 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Loader from "react-loader-spinner";
+import { postLogin } from "../services/API";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
+
+  function Login() {
+    setLoading(true);
+
+    const body = {
+      email,
+      password,
+    };
+
+    postLogin(body)
+      .then((res) => {
+        console.log("resposta do login", res.data);
+        setLoading(false);
+        history.push("/today");
+      })
+      .catch((err) => {
+        alert(
+          "Ocorreu um erro ao tentar fazer seu login. Por favor, preencha os dados novamente."
+        );
+        setLoading(false);
+        setEmail("");
+        setPassword("");
+      });
+  }
 
   return (
     <Container>
@@ -28,9 +56,21 @@ export default function Login() {
           value={password}
         ></Password>
       </Form>
-      <Link to="/habits">
-        <EnterButton>Entrar</EnterButton>
-      </Link>
+
+      <EnterButton onClick={Login} disabled={loading ? true : false}>
+        {loading ? (
+          <Loader
+            type="ThreeDots"
+            color="#ffffff"
+            height={80}
+            width={80}
+            timeout={5000}
+          />
+        ) : (
+          "Entrar"
+        )}
+      </EnterButton>
+
       <Link to="/sign-up">
         <Register>Não tem uma conta? Cadastre-se!</Register>
       </Link>
@@ -77,12 +117,16 @@ const Email = styled.input`
   padding-left: 11px;
   color: #666666;
 
-  ::placeholder {
+  &::placeholder {
     color: #dbdbdb;
   }
 
-  :focus {
+  &:focus {
     outline: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
   }
 `;
 
@@ -98,6 +142,13 @@ const EnterButton = styled.button`
   margin: 6px 0 25px 0;
   font-size: 20px;
   font-family: "Lexend Deca", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 const Register = styled.p`
