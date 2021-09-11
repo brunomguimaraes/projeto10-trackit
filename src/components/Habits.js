@@ -4,7 +4,17 @@ import Bottom from "./Bottom";
 import Header from "./Header";
 
 export default function Habits() {
-  const [habit, sethabit] = useState("");
+  const days = ["D", "S", "T", "Q", "Q", "S", "S"];
+  const [habitName, setHabitName] = useState("");
+  const [startHabitCreation, setStartHabitCreation] = useState(false);
+
+  function startCreation() {
+    setStartHabitCreation(true);
+  }
+
+  function cancelCreation() {
+    setStartHabitCreation(false);
+  }
 
   return (
     <>
@@ -13,14 +23,15 @@ export default function Habits() {
         <HabitsBox>
           <Top>
             <Title>Meus Hábitos</Title>
-            <AddHabitButton>+</AddHabitButton>
+            <AddHabitButton onClick={startCreation}>+</AddHabitButton>
           </Top>
-          <HabitCreationForm>
+          <HabitCreationForm startHabitCreation={startHabitCreation}>
             <HabitNameInput
               type="text"
               placeholder="nome do hábito"
-              onChange={(e) => sethabit(e.target.value)}
-              value={habit}
+              onChange={(e) => setHabitName(e.target.value)}
+              value={habitName}
+              required
             ></HabitNameInput>
             <Weekdays>
               <Day7>D</Day7>
@@ -32,8 +43,10 @@ export default function Habits() {
               <Day6>S</Day6>
             </Weekdays>
             <Buttons>
-              <Cancel>Cancelar</Cancel>
-              <Save>Salvar</Save>
+              <Cancel type="button" onClick={cancelCreation}>
+                Cancelar
+              </Cancel>
+              <Save type={"submit"}>Salvar</Save>
             </Buttons>
           </HabitCreationForm>
           <SingleHabitBox>
@@ -99,7 +112,7 @@ const AddHabitButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  :hover {
+  &:hover {
     filter: brightness(108%);
     cursor: pointer;
   }
@@ -118,7 +131,7 @@ const HabitCreationForm = styled.form`
   border-radius: 5px;
   background-color: #ffffff;
   margin-top: 20px;
-  display: ${1 > 0 ? "inherit" : "none"};
+  display: ${(props) => (props.startHabitCreation ? "inherit" : "none")};
 `;
 
 const HabitNameInput = styled.input`
@@ -193,7 +206,7 @@ const Cancel = styled.button`
   border-radius: 5px;
   width: 84px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
     color: red;
   }
@@ -206,7 +219,7 @@ const Save = styled.button`
   height: 35px;
   border-radius: 5px;
 
-  :hover {
+  &:hover {
     cursor: pointer;
     filter: brightness(108%);
   }
