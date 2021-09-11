@@ -15,7 +15,7 @@ export default function Habits() {
             <Title>Meus Hábitos</Title>
             <AddHabitButton>+</AddHabitButton>
           </Top>
-          <HabitCreationBox>
+          <HabitCreationForm>
             <HabitNameInput
               type="text"
               placeholder="nome do hábito"
@@ -35,9 +35,11 @@ export default function Habits() {
               <Cancel>Cancelar</Cancel>
               <Save>Salvar</Save>
             </Buttons>
-          </HabitCreationBox>
+          </HabitCreationForm>
           <SingleHabitBox>
-            <Icon><ion-icon name="trash-outline"></ion-icon></Icon>
+            <Icon>
+              <ion-icon name="trash-outline"></ion-icon>
+            </Icon>
             <Name>Ler 1 capítulo de livro</Name>
             <HabitWeekdays>
               <Day7>D</Day7>
@@ -110,13 +112,13 @@ const DefaultMessage = styled.div`
   line-height: 23px;
 `;
 
-const HabitCreationBox = styled.div`
+const HabitCreationForm = styled.form`
   width: calc((100vw - 36px));
   height: 180px;
   border-radius: 5px;
   background-color: #ffffff;
   margin-top: 20px;
-  display: ${1 > 0 ? 'inherit' : 'none'};
+  display: ${1 > 0 ? "inherit" : "none"};
 `;
 
 const HabitNameInput = styled.input`
@@ -133,7 +135,7 @@ const HabitNameInput = styled.input`
     color: #dbdbdb;
   }
 
-  :focus{
+  :focus {
     outline: none;
   }
 `;
@@ -217,9 +219,9 @@ const SingleHabitBox = styled.div`
   background-color: #ffffff;
   margin-top: 20px;
   margin-bottom: 10px;
-  display: ${1 > 0 ? 'inherit' : 'none'};
+  display: ${1 > 0 ? "inherit" : "none"};
   position: relative;
-`
+`;
 const Name = styled.p`
   color: #666666;
   font-size: 20px;
@@ -227,17 +229,17 @@ const Name = styled.p`
   padding-left: 18px;
   margin-bottom: 8px;
   padding-top: 13px;
-`
+`;
 
 const Icon = styled.div`
   width: 13px;
   height: 13px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   position: absolute;
   top: 11px;
   right: 10px;
 
-  :hover{
+  :hover {
     cursor: pointer;
   }
-`
+`;

@@ -2,45 +2,39 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link, useHistory } from "react-router-dom";
-import { postSignUp } from "../services/API";
 import Loader from "react-loader-spinner";
+import { postLogin } from "../services/API";
 
-export default function SignUp() {
+export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const history = useHistory();
 
-  function CreateUser(event) {
+  function Login(event) {
     event.preventDefault();
     setLoading(true);
 
     const body = {
       email,
       password,
-      name,
-      image,
     };
 
-    postSignUp(body)
+    postLogin(body)
       .then((res) => {
-        console.log("resposta do sign up", res.data);
-        setLoading(false);
-        history.push("/");
-        alert("Seu cadastro foi realizado com sucesso!");
+        setUser(res.data);
+        console.log("resposta do login", res.data);
+        setLoading(false);        
+        history.push("/today");
       })
       .catch(() => {
         alert(
-          "Ocorreu um erro ao criar seu cadastro. Por favor, preencha os dados novamente."
+          "Ocorreu um erro ao tentar fazer seu login. Por favor, preencha os dados novamente."
         );
         setLoading(false);
         setEmail("");
         setPassword("");
-        setName("");
-        setImage("");
       });
   }
 
@@ -50,7 +44,7 @@ export default function SignUp() {
         <Logo src={logo} alt="logo-image" />
         <Title>TrackIt</Title>
       </Link>
-      <Form onSubmit={CreateUser}>
+      <Form onSubmit={Login}>
         <Email
           type="email"
           placeholder="email"
@@ -67,24 +61,8 @@ export default function SignUp() {
           disabled={loading ? true : false}
           required
         ></Password>
-        <Name
-          type="text"
-          placeholder="nome"
-          onChange={(e) => setName(e.target.value)}
-          value={name}
-          disabled={loading ? true : false}
-          required
-        ></Name>
-        <Image
-          type="url"
-          placeholder="foto"
-          onChange={(e) => setImage(e.target.value)}
-          value={image}
-          disabled={loading ? true : false}
-          required
-        ></Image>
 
-        <RegisterButton type={"submit"} disabled={loading ? true : false}>
+        <EnterButton type={"submit"} disabled={loading ? true : false}>
           {loading ? (
             <Loader
               type="ThreeDots"
@@ -94,12 +72,13 @@ export default function SignUp() {
               timeout={5000}
             />
           ) : (
-            "Cadastrar"
+            "Entrar"
           )}
-        </RegisterButton>
+        </EnterButton>
       </Form>
-      <Link to="/">
-        <Login>Já tem uma conta? Faça login!</Login>
+
+      <Link to="/sign-up">
+        <Register>Não tem uma conta? Cadastre-se!</Register>
       </Link>
     </Container>
   );
@@ -129,6 +108,8 @@ const Logo = styled.img`
 const Form = styled.form`
   width: 303px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Email = styled.input`
@@ -142,26 +123,22 @@ const Email = styled.input`
   padding-left: 11px;
   color: #666666;
 
-  ::placeholder {
+  &::placeholder {
     color: #dbdbdb;
   }
 
-  :focus {
+  &:focus {
     outline: none;
   }
 
-  :disabled {
+  &:disabled {
     opacity: 0.5;
   }
 `;
 
 const Password = Email;
 
-const Name = Email;
-
-const Image = Email;
-
-const RegisterButton = styled.button`
+const EnterButton = styled.button`
   width: 303px;
   height: 45px;
   color: #ffffff;
@@ -172,15 +149,15 @@ const RegisterButton = styled.button`
   font-size: 20px;
   font-family: "Lexend Deca", sans-serif;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 
-  :disabled {
+  &:disabled {
     opacity: 0.5;
   }
 `;
 
-const Login = styled.p`
+const Register = styled.p`
   font-size: 14px;
   color: #52b6ff;
   text-decoration-line: underline;

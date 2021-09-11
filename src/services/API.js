@@ -12,4 +12,6 @@ function postLogin(body) {
   return promise;
 }
 
+function postCreatHabits() {}
+
 export { postLogin, postSignUp };

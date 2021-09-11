@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import profile from "../assets/profile.png"
+import UserContext from "../contexts/UserContext";
 
 export default function Header() {
+
+  const user = useContext(UserContext);
+
   return (
     <HeaderContainer>
       <HeaderBox>
         <Title>TrackIt</Title>
-        <UserPicture src={profile}/>
+        <UserPicture src={user.image} />
       </HeaderBox>
     </HeaderContainer>
   );
@@ -40,8 +43,8 @@ const Title = styled.div`
   color: #ffffff;
 `;
 
-const UserPicture = styled.img `
-    height: 51px;
-    width: 51px;
-    border-radius: 100px;
-`
+const UserPicture = styled.img`
+  height: 51px;
+  width: 51px;
+  border-radius: 100px;
+`;
