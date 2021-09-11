@@ -14,7 +14,8 @@ export default function SignUp() {
 
   const history = useHistory();
 
-  function CreateUser() {
+  function CreateUser(event) {
+    event.preventDefault();
     setLoading(true);
 
     const body = {
@@ -31,7 +32,7 @@ export default function SignUp() {
         history.push("/");
         alert("Seu cadastro foi realizado com sucesso!");
       })
-      .catch((err) => {
+      .catch(() => {
         alert(
           "Ocorreu um erro ao criar seu cadastro. Por favor, preencha os dados novamente."
         );
@@ -49,13 +50,14 @@ export default function SignUp() {
         <Logo src={logo} alt="logo-image" />
         <Title>TrackIt</Title>
       </Link>
-      <Form>
+      <Form onSubmit={CreateUser}>
         <Email
-          type="text"
+          type="email"
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           disabled={loading ? true : false}
+          required
         ></Email>
         <Password
           type="password"
@@ -63,6 +65,7 @@ export default function SignUp() {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           disabled={loading ? true : false}
+          required
         ></Password>
         <Name
           type="text"
@@ -70,28 +73,31 @@ export default function SignUp() {
           onChange={(e) => setName(e.target.value)}
           value={name}
           disabled={loading ? true : false}
+          required
         ></Name>
         <Image
-          type="text"
+          type="url"
           placeholder="foto"
           onChange={(e) => setImage(e.target.value)}
           value={image}
           disabled={loading ? true : false}
+          required
         ></Image>
+
+        <RegisterButton type={"submit"} disabled={loading ? true : false}>
+          {loading ? (
+            <Loader
+              type="ThreeDots"
+              color="#ffffff"
+              height={80}
+              width={80}
+              timeout={5000}
+            />
+          ) : (
+            "Cadastrar"
+          )}
+        </RegisterButton>
       </Form>
-      <RegisterButton onClick={CreateUser} disabled={loading ? true : false}>
-        {loading ? (
-          <Loader
-            type="ThreeDots"
-            color="#ffffff"
-            height={80}
-            width={80}
-            timeout={5000}
-          />
-        ) : (
-          "Cadastrar"
-        )}
-      </RegisterButton>
       <Link to="/">
         <Login>Já tem uma conta? Faça login!</Login>
       </Link>
@@ -120,7 +126,7 @@ const Logo = styled.img`
   margin-bottom: 8px;
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   width: 303px;
   margin: 0 auto;
 `;

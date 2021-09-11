@@ -12,7 +12,9 @@ export default function Login() {
 
   const history = useHistory();
 
-  function Login() {
+  function Login(event) {
+    event.preventDefault();
+
     setLoading(true);
 
     const body = {
@@ -42,34 +44,38 @@ export default function Login() {
         <Logo src={logo} alt="logo-image" />
         <Title>TrackIt</Title>
       </Link>
-      <Form>
+      <Form onSubmit={Login}>
         <Email
-          type="text"
+          type="email"
           placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
+          disabled={loading ? true : false}
+          required
         ></Email>
         <Password
           type="password"
           placeholder="senha"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
+          disabled={loading ? true : false}
+          required
         ></Password>
-      </Form>
 
-      <EnterButton onClick={Login} disabled={loading ? true : false}>
-        {loading ? (
-          <Loader
-            type="ThreeDots"
-            color="#ffffff"
-            height={80}
-            width={80}
-            timeout={5000}
-          />
-        ) : (
-          "Entrar"
-        )}
-      </EnterButton>
+        <EnterButton type={"submit"} disabled={loading ? true : false}>
+          {loading ? (
+            <Loader
+              type="ThreeDots"
+              color="#ffffff"
+              height={80}
+              width={80}
+              timeout={5000}
+            />
+          ) : (
+            "Entrar"
+          )}
+        </EnterButton>
+      </Form>
 
       <Link to="/sign-up">
         <Register>Não tem uma conta? Cadastre-se!</Register>
@@ -99,7 +105,7 @@ const Logo = styled.img`
   margin-bottom: 8px;
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   width: 303px;
   margin: 0 auto;
   display: flex;
