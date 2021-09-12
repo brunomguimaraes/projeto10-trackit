@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Loader from "react-loader-spinner";
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
 import UserContext from "../contexts/UserContext";
-import { postCreateHabit } from "../services/API";
+import { postCreateHabit, getListHabits } from "../services/API";
 import { useHistory } from "react-router-dom";
 
 export default function Habits() {
@@ -49,10 +49,20 @@ export default function Habits() {
   const [startHabitCreation, setStartHabitCreation] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userHabits, setUserHabits] = useState(null);
 
   const history = useHistory();
 
   const user = useContext(UserContext);
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+    getListHabits(config).then((res) => setUserHabits(res.data));
+  }, []);
 
   function startCreation() {
     setStartHabitCreation(true);
@@ -78,6 +88,11 @@ export default function Habits() {
     event.preventDefault();
     setLoading(true);
 
+    if (selectedDays.length === 0) {
+      setLoading(false);
+      return alert("É necessário selecionar pelo menos um dia da semana!");
+    }
+
     const config = {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -95,6 +110,7 @@ export default function Habits() {
         setLoading(false);
         setHabitName("");
         setSelectedDays([]);
+        setStartHabitCreation(false);
         history.push("/habits");
       })
       .catch(() => {
@@ -164,21 +180,35 @@ export default function Habits() {
               </Save>
             </Buttons>
           </HabitCreationForm>
-          <SingleHabitBox>
-            <Icon>
-              <ion-icon name="trash-outline"></ion-icon>
-            </Icon>
-            <Name>Ler 1 capítulo de livro</Name>
-            <HabitWeekdays>
-              {days.map((day, index) => (
-                <Day key={index}> {day.name} </Day>
-              ))}
-            </HabitWeekdays>
-          </SingleHabitBox>
-          <DefaultMessage>
-            Você não tem nenhum hábito cadastrado ainda. Adicone um hábito para
-            começar a trackear!
-          </DefaultMessage>
+
+          {userHabits ? (
+            userHabits.map((habit) => (
+              <SingleHabitBox habitId={habit.id}>
+                <Icon>
+                  <ion-icon name="trash-outline"></ion-icon>
+                </Icon>
+                <Name>{habit.name}</Name>
+                <HabitWeekdays>
+                  {days.map((day, index) => (
+                    <Day
+                      key={index}
+                      selectedDay={
+                        habit.days.find((id) => id === day.id) ? true : false
+                      }
+                    >
+                      {" "}
+                      {day.name}{" "}
+                    </Day>
+                  ))}
+                </HabitWeekdays>
+              </SingleHabitBox>
+            ))
+          ) : (
+            <DefaultMessage>
+              Você não tem nenhum hábito cadastrado ainda. Adicone um hábito
+              para começar a trackear!
+            </DefaultMessage>
+          )}
         </HabitsBox>
       </HabitsContainer>
 
@@ -190,9 +220,9 @@ export default function Habits() {
 const HabitsContainer = styled.div`
   background-color: #f2f2f2;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   margin-top: 70px;
-  margin-bottom: 70px;
+  padding-bottom: 120px;
 `;
 
 const HabitsBox = styled.div`
@@ -299,7 +329,7 @@ const CreateHabitDay = styled.div`
 `;
 
 const Day = styled.div`
-  color: #dbdbdb;
+  color: ${(props) => (props.selectedDay ? "#ffffff" : "#dbdbdb")};
   font-size: 20px;
   text-align: center;
   width: 30px;
@@ -310,6 +340,7 @@ const Day = styled.div`
   justify-content: center;
   border-radius: 5px;
   margin-right: 4px;
+  background-color: ${(props) => (props.selectedDay ? "#cfcfcf" : "#FFFFFF")};
 `;
 
 const Buttons = styled.div`

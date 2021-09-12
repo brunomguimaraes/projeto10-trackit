@@ -17,4 +17,9 @@ function postCreateHabit(body, config) {
   return promise;
 }
 
-export { postLogin, postSignUp, postCreateHabit };
+function getListHabits(config) {
+  const promise = axios.get(`${BASE_URL}/habits`, config)
+  return promise;
+}
+
+export { postLogin, postSignUp, postCreateHabit, getListHabits };
