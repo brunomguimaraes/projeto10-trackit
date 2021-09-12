@@ -72,7 +72,6 @@ export default function Habits() {
       setSelectedDays([...selectedDays, day.id]);
     }
     console.log(selectedDays);
-    console.log({ habitName });
   }
 
   function CreateHabit(event) {
@@ -86,8 +85,8 @@ export default function Habits() {
     };
 
     const body = {
-      name: `"${habitName}"`,
-      days: `${selectedDays}`,
+      name: `${habitName}`,
+      days: selectedDays,
     };
 
     postCreateHabit(body, config)
