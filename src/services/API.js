@@ -13,13 +13,18 @@ function postLogin(body) {
 }
 
 function postCreateHabit(body, config) {
-  const promise = axios.post(`${BASE_URL}/habits`, body, config)
+  const promise = axios.post(`${BASE_URL}/habits`, body, config);
   return promise;
 }
 
 function getListHabits(config) {
-  const promise = axios.get(`${BASE_URL}/habits`, config)
+  const promise = axios.get(`${BASE_URL}/habits`, config);
   return promise;
 }
 
-export { postLogin, postSignUp, postCreateHabit, getListHabits };
+function deleteHabit(habitId, config) {
+  const promise = axios.delete(`${BASE_URL}/habits/${habitId}`, config);
+  return promise;
+}
+
+export { postLogin, postSignUp, postCreateHabit, getListHabits, deleteHabit };

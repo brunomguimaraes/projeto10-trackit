@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
 import UserContext from "../contexts/UserContext";
-import { postCreateHabit, getListHabits } from "../services/API";
+import { postCreateHabit, getListHabits, deleteHabit } from "../services/API";
 import { useHistory } from "react-router-dom";
 
 export default function Habits() {
@@ -49,18 +49,19 @@ export default function Habits() {
   const [startHabitCreation, setStartHabitCreation] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [userHabits, setUserHabits] = useState(null);
+  const [userHabits, setUserHabits] = useState([]);
 
   const history = useHistory();
 
   const user = useContext(UserContext);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
   useEffect(() => {
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
     getListHabits(config).then((res) => setUserHabits(res.data));
   }, []);
 
@@ -93,12 +94,6 @@ export default function Habits() {
       return alert("É necessário selecionar pelo menos um dia da semana!");
     }
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    };
-
     const body = {
       name: `${habitName}`,
       days: selectedDays,
@@ -125,13 +120,13 @@ export default function Habits() {
       });
   }
 
-  function DeleteHabit() {
+  function DeleteHabit(habitId) {
     const answer = window.confirm("Deseja realmente deletar este hábito?");
 
-    if (answer){
-      alert("o hábito será cancelado então, dentro desse if :)")
-    } else {
-      alert("desistiu do canelamento");
+    if (answer) {
+      deleteHabit(habitId, config).then(() => {
+        getListHabits(config).then((res) => setUserHabits(res.data));
+      });
     }
   }
 
@@ -193,10 +188,10 @@ export default function Habits() {
             </Buttons>
           </HabitCreationForm>
 
-          {userHabits ? (
+          {userHabits.length !== 0 ? (
             userHabits.map((habit) => (
               <SingleHabitBox habitId={habit.id}>
-                <Icon onClick={DeleteHabit}>
+                <Icon onClick={() => DeleteHabit(habit.id)}>
                   <ion-icon name="trash-outline"></ion-icon>
                 </Icon>
                 <Name>{habit.name}</Name>
@@ -232,7 +227,7 @@ export default function Habits() {
 const HabitsContainer = styled.div`
   background-color: #f2f2f2;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   margin-top: 70px;
   padding-bottom: 120px;
 `;
