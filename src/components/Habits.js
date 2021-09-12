@@ -111,6 +111,8 @@ export default function Habits() {
         setHabitName("");
         setSelectedDays([]);
         setStartHabitCreation(false);
+        getListHabits(config).then((res) => setUserHabits(res.data));
+
         history.push("/habits");
       })
       .catch(() => {
@@ -121,6 +123,16 @@ export default function Habits() {
         setHabitName("");
         setSelectedDays([]);
       });
+  }
+
+  function DeleteHabit() {
+    const answer = window.confirm("Deseja realmente deletar este hábito?");
+
+    if (answer){
+      alert("o hábito será cancelado então, dentro desse if :)")
+    } else {
+      alert("desistiu do canelamento");
+    }
   }
 
   return (
@@ -184,7 +196,7 @@ export default function Habits() {
           {userHabits ? (
             userHabits.map((habit) => (
               <SingleHabitBox habitId={habit.id}>
-                <Icon>
+                <Icon onClick={DeleteHabit}>
                   <ion-icon name="trash-outline"></ion-icon>
                 </Icon>
                 <Name>{habit.name}</Name>
@@ -340,6 +352,7 @@ const Day = styled.div`
   justify-content: center;
   border-radius: 5px;
   margin-right: 4px;
+  margin-bottom: 16px;
   background-color: ${(props) => (props.selectedDay ? "#cfcfcf" : "#FFFFFF")};
 `;
 
@@ -392,7 +405,7 @@ const Save = styled.button`
 
 const SingleHabitBox = styled.div`
   width: calc((100vw - 36px));
-  height: 91px;
+  min-height: 91px;
   border-radius: 5px;
   background-color: #ffffff;
   margin-top: 20px;
