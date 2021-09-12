@@ -1,44 +1,65 @@
 import dayjs from "dayjs";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
+import { getTodayHabits } from "../services/API";
+import UserContext from "../contexts/UserContext";
 
-export default function HabitsToday() {
-  const day = (dayjs().date());
-  const month = ((dayjs().month())) + 1;
-  const year = (dayjs().year())
-  const numberWeekday = (dayjs().day())
+export default function HabitsToday({ setDailyProgress }) {
+  const day = dayjs().date();
+  const month = dayjs().month() + 1;
+  const year = dayjs().year();
+  const numberWeekday = dayjs().day();
   let weekday = "";
 
   switch (numberWeekday) {
-    case 0: 
-      weekday = "Domingo";  
+    case 0:
+      weekday = "Domingo";
       break;
-      case 1: 
-      weekday = "Segunda";  
+    case 1:
+      weekday = "Segunda";
       break;
-      case 2: 
-      weekday = "Terça";  
+    case 2:
+      weekday = "Terça";
       break;
-      case 3: 
-      weekday = "Quarta";  
+    case 3:
+      weekday = "Quarta";
       break;
-      case 4: 
-      weekday = "Quinta";  
+    case 4:
+      weekday = "Quinta";
       break;
-      case 5: 
-      weekday = "Sexta";  
+    case 5:
+      weekday = "Sexta";
       break;
-      case 6: 
-      weekday = "Sábado";  
+    case 6:
+      weekday = "Sábado";
       break;
-  
-    default: weekday = "";
+
+    default:
+      weekday = "";
       break;
   }
 
-  console.log(`${weekday}, ${day}/${month}/${year}`)
+  const today = `${weekday}, ${day}/${month}/${year}`;
+
+  const user = useContext(UserContext);
+  const [todayHabits, setTodayHabits] = useState([]);
+
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
+  useEffect(() => {
+    getTodayHabits(config).then((res) => {
+      setTodayHabits(res.data);
+      console.log(res.data);
+    });
+  }, []);
+  console.log(today, "hoje");
+
   return (
     <>
       <Header />
@@ -47,16 +68,18 @@ export default function HabitsToday() {
           <Weekday>{`${weekday}, ${day}/${month}/${year}`}</Weekday>
           <TodayMessage>{"Nenhum hábito concluído ainda"}</TodayMessage>
         </TodayHeader>
-        <HabitBox>
-          <Info>
-            <HabitName>{"Ler capítulo do livro mágico"}</HabitName>
-            <Sequency>Sequência atual: {3} dias</Sequency>
-            <Record>Seu recorde: {3} dias</Record>
-          </Info>
-          <Check>
-            <ion-icon name="checkbox"></ion-icon>
-          </Check>
-        </HabitBox>
+        {todayHabits.map((habit) => (
+          <HabitBox>
+            <Info>
+              <HabitName>{habit.name}</HabitName>
+              <Sequency>Sequência atual: {habit.currentSequence} dias</Sequency>
+              <Record>Seu recorde: {habit.highestSequence} dias</Record>
+            </Info>
+            <Check>
+              <ion-icon name="checkbox"></ion-icon>
+            </Check>
+          </HabitBox>
+        ))}
       </Container>
       <Bottom />
     </>
@@ -127,7 +150,7 @@ const Check = styled.div`
     border-radius: 5px;
     width: 69px;
     height: 69px;
-    
+
     :hover {
       color: #8fc549;
       cursor: pointer;

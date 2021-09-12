@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import DailyProgressContext from "../contexts/DailyProgressContext";
 
 export default function Bottom() {
   return (
@@ -10,7 +13,20 @@ export default function Bottom() {
           <Habits>Hábitos</Habits>
         </Link>
         <Link to="/today">
-          <Today>Hoje</Today>
+          <Today>
+            <CircularProgressbar
+              value={50}
+              text={"Hoje"}
+              background
+              backgroundPadding={6}
+              styles={buildStyles({
+                backgroundColor: "#52B6FF",
+                textColor: "#fff",
+                pathColor: "#fff",
+                trailColor: "transparent",
+              })}
+            />
+          </Today>
         </Link>
         <Link to="/history">
           <History>Histórico</History>

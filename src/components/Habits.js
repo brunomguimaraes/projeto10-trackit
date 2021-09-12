@@ -11,7 +11,7 @@ export default function Habits() {
   const days = [
     {
       name: "D",
-      id: 7,
+      id: 0,
       isSelected: false,
     },
     {
@@ -82,6 +82,7 @@ export default function Habits() {
       day.isSelected = true;
       setSelectedDays([...selectedDays, day.id]);
     }
+    console.log(selectedDays)
   }
 
   function CreateHabit(event) {
@@ -125,7 +126,7 @@ export default function Habits() {
       deleteHabit(habitId, config).then(() => {
         getListHabits(config).then((res) => setUserHabits(res.data));
       });
-      history.push('/habits')
+      history.push("/habits");
     }
   }
 
