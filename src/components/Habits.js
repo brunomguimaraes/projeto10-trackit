@@ -1,12 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import Loader from "react-loader-spinner";
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
+import UserContext from "../contexts/UserContext";
+import { postCreateHabit } from "../services/API";
+import { useHistory } from "react-router-dom";
 
 export default function Habits() {
-  const days = ["D", "S", "T", "Q", "Q", "S", "S"];
+  const days = [
+    {
+      name: "D",
+      id: 7,
+      isSelected: false,
+    },
+    {
+      name: "S",
+      id: 1,
+      isSelected: false,
+    },
+    {
+      name: "T",
+      id: 2,
+      isSelected: false,
+    },
+    {
+      name: "Q",
+      id: 3,
+      isSelected: false,
+    },
+    {
+      name: "Q",
+      id: 4,
+      isSelected: false,
+    },
+    {
+      name: "S",
+      id: 5,
+      isSelected: false,
+    },
+    {
+      name: "S",
+      id: 6,
+      isSelected: false,
+    },
+  ];
   const [habitName, setHabitName] = useState("");
   const [startHabitCreation, setStartHabitCreation] = useState(false);
+  const [selectedDays, setSelectedDays] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
+
+  const user = useContext(UserContext);
 
   function startCreation() {
     setStartHabitCreation(true);
@@ -14,6 +60,52 @@ export default function Habits() {
 
   function cancelCreation() {
     setStartHabitCreation(false);
+  }
+
+  function selectDay(day) {
+    if (selectedDays.includes(day.id)) {
+      day.isSelected = false;
+      const filteredDays = selectedDays.filter((d) => d !== day.id);
+      setSelectedDays(filteredDays);
+    } else {
+      day.isSelected = true;
+      setSelectedDays([...selectedDays, day.id]);
+    }
+    console.log(selectedDays);
+    console.log({ habitName });
+  }
+
+  function CreateHabit(event) {
+    event.preventDefault();
+    setLoading(true);
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    };
+
+    const body = {
+      name: `"${habitName}"`,
+      days: `${selectedDays}`,
+    };
+
+    postCreateHabit(body, config)
+      .then((res) => {
+        console.log("criar hábito", res.data);
+        setLoading(false);
+        setHabitName("");
+        setSelectedDays([]);
+        history.push("/habits");
+      })
+      .catch(() => {
+        alert(
+          "Ocorreu um erro durante a criação do seu hábito. Por favor, repita o procedimento."
+        );
+        setLoading(false);
+        setHabitName("");
+        setSelectedDays([]);
+      });
   }
 
   return (
@@ -25,28 +117,52 @@ export default function Habits() {
             <Title>Meus Hábitos</Title>
             <AddHabitButton onClick={startCreation}>+</AddHabitButton>
           </Top>
-          <HabitCreationForm startHabitCreation={startHabitCreation}>
+          <HabitCreationForm
+            startHabitCreation={startHabitCreation}
+            onSubmit={CreateHabit}
+          >
             <HabitNameInput
               type="text"
               placeholder="nome do hábito"
               onChange={(e) => setHabitName(e.target.value)}
               value={habitName}
               required
+              disabled={loading ? true : false}
             ></HabitNameInput>
             <Weekdays>
-              <Day7>D</Day7>
-              <Day1>S</Day1>
-              <Day2>T</Day2>
-              <Day3>Q</Day3>
-              <Day4>Q</Day4>
-              <Day5>S</Day5>
-              <Day6>S</Day6>
+              {days.map((day) => (
+                <CreateHabitDay
+                  key={day.id}
+                  onClick={() => selectDay(day)}
+                  selectedDay={selectedDays.find((d) =>
+                    d === day.id ? true : false
+                  )}
+                >
+                  {day.name}
+                </CreateHabitDay>
+              ))}
             </Weekdays>
             <Buttons>
-              <Cancel type="button" onClick={cancelCreation}>
+              <Cancel
+                type="button"
+                onClick={cancelCreation}
+                disabled={loading ? true : false}
+              >
                 Cancelar
               </Cancel>
-              <Save type={"submit"}>Salvar</Save>
+              <Save type={"submit"} disabled={loading ? true : false}>
+                {loading ? (
+                  <Loader
+                    type="ThreeDots"
+                    color="#ffffff"
+                    height={80}
+                    width={80}
+                    timeout={5000}
+                  />
+                ) : (
+                  "Salvar"
+                )}
+              </Save>
             </Buttons>
           </HabitCreationForm>
           <SingleHabitBox>
@@ -55,13 +171,9 @@ export default function Habits() {
             </Icon>
             <Name>Ler 1 capítulo de livro</Name>
             <HabitWeekdays>
-              <Day7>D</Day7>
-              <Day1>S</Day1>
-              <Day2>T</Day2>
-              <Day3>Q</Day3>
-              <Day4>Q</Day4>
-              <Day5>S</Day5>
-              <Day6>S</Day6>
+              {days.map((day, index) => (
+                <Day key={index}> {day.name} </Day>
+              ))}
             </HabitWeekdays>
           </SingleHabitBox>
           <DefaultMessage>
@@ -151,6 +263,10 @@ const HabitNameInput = styled.input`
   :focus {
     outline: none;
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 const Weekdays = styled.div`
@@ -162,7 +278,28 @@ const Weekdays = styled.div`
 
 const HabitWeekdays = Weekdays;
 
-const Day1 = styled.div`
+const CreateHabitDay = styled.div`
+  color: ${(props) => (props.selectedDay ? "#ffffff" : "#dbdbdb")};
+  font-size: 20px;
+  text-align: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d5d5d5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  margin-right: 4px;
+  background-color: ${(props) => (props.selectedDay ? "#cfcfcf" : "#FFFFFF")};
+
+  &:hover {
+    background-color: #cfcfcf;
+    color: #ffffff;
+    cursor: pointer;
+  }
+`;
+
+const Day = styled.div`
   color: #dbdbdb;
   font-size: 20px;
   text-align: center;
@@ -174,20 +311,7 @@ const Day1 = styled.div`
   justify-content: center;
   border-radius: 5px;
   margin-right: 4px;
-
-  :hover {
-    background-color: #cfcfcf;
-    color: #ffffff;
-    cursor: pointer;
-  }
 `;
-
-const Day2 = Day1;
-const Day3 = Day1;
-const Day4 = Day1;
-const Day5 = Day1;
-const Day6 = Day1;
-const Day7 = Day1;
 
 const Buttons = styled.div`
   font-size: 16px;
@@ -210,6 +334,10 @@ const Cancel = styled.button`
     cursor: pointer;
     color: red;
   }
+
+  &:disabled {
+    opacity: 0.5;
+  }
 `;
 
 const Save = styled.button`
@@ -218,10 +346,17 @@ const Save = styled.button`
   width: 84px;
   height: 35px;
   border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     cursor: pointer;
     filter: brightness(108%);
+  }
+
+  &:disabled {
+    opacity: 0.5;
   }
 `;
 

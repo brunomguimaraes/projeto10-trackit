@@ -12,6 +12,9 @@ function postLogin(body) {
   return promise;
 }
 
-function postCreatHabits() {}
+function postCreateHabit(body, config) {
+  const promise = axios.post(`${BASE_URL}/habits`, body, config)
+  return promise;
+}
 
-export { postLogin, postSignUp };
+export { postLogin, postSignUp, postCreateHabit };
