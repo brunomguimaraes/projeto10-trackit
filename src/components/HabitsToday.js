@@ -1,15 +1,50 @@
+import dayjs from "dayjs";
 import React from "react";
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
 
 export default function HabitsToday() {
+  const day = (dayjs().date());
+  const month = ((dayjs().month())) + 1;
+  const year = (dayjs().year())
+  const numberWeekday = (dayjs().day())
+  let weekday = "";
+
+  switch (numberWeekday) {
+    case 0: 
+      weekday = "Domingo";  
+      break;
+      case 1: 
+      weekday = "Segunda";  
+      break;
+      case 2: 
+      weekday = "Terça";  
+      break;
+      case 3: 
+      weekday = "Quarta";  
+      break;
+      case 4: 
+      weekday = "Quinta";  
+      break;
+      case 5: 
+      weekday = "Sexta";  
+      break;
+      case 6: 
+      weekday = "Sábado";  
+      break;
+  
+    default: weekday = "";
+      break;
+  }
+
+  console.log(`${weekday}, ${day}/${month}/${year}`)
   return (
     <>
       <Header />
       <Container>
         <TodayHeader>
-          <Weekday>{"Segunda, 17/05"}</Weekday>
+          <Weekday>{`${weekday}, ${day}/${month}/${year}`}</Weekday>
           <TodayMessage>{"Nenhum hábito concluído ainda"}</TodayMessage>
         </TodayHeader>
         <HabitBox>
