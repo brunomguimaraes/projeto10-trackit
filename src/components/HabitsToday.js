@@ -50,7 +50,7 @@ export default function HabitsToday() {
 
   const { user } = useContext(UserContext);
 
-  const {dailyProgress, setDailyProgress} = useContext(DailyProgressContext);
+  const { dailyProgress, setDailyProgress } = useContext(DailyProgressContext);
 
   const [todayHabits, setTodayHabits] = useState([]);
   const [checkedHabits, setCheckedHabits] = useState([]);
@@ -68,30 +68,31 @@ export default function HabitsToday() {
   }, []);
 
   function checkHabit(habit) {
-    calculateDailyProgress();
-    if (checkedHabits.includes(habit.id)) {
+    console.log('entrada', habit)
+    if (habit.done === true) {
       postUncheckHabit(habit.id, config).then(() => {
         habit.currentSequence--;
         const filteredHabits = checkedHabits.filter((h) => h !== habit.id);
         setCheckedHabits(filteredHabits);
-        console.log('caiu no uncheck')
+        console.log("caiu no uncheck");
       });
     } else {
       postCheckHabit(habit.id, config).then(() => {
         habit.currentSequence++;
         setCheckedHabits([...checkedHabits, habit.id]);
-        console.log('caiu no check')
+        console.log("caiu no check");
       });
     }
     if (habit.currentSequence > habit.highestSequence) {
       habit.highestSequence = habit.currentSequence;
     }
+    calculateDailyProgress();
     console.log("checked", checkedHabits);
     console.log("today", todayHabits);
   }
 
   function calculateDailyProgress() {
-    const total = ((checkedHabits.length / todayHabits.length) * 100)
+    const total = (checkedHabits.length / todayHabits.length) * 100;
     setDailyProgress(total);
     console.log("progress", dailyProgress);
   }
@@ -103,7 +104,7 @@ export default function HabitsToday() {
         <TodayHeader>
           <Weekday>{today}</Weekday>
           <TodayMessage>
-            {(checkedHabits.length === 0) && (dailyProgress < 1)
+            {checkedHabits.length === 0 || todayHabits.length === 0
               ? "Nenhum hábito concluído ainda"
               : `${dailyProgress}% dos hábitos concluídos`}
           </TodayMessage>
@@ -122,7 +123,9 @@ export default function HabitsToday() {
                   checkHabit(habit);
                   // calculateDailyProgress();
                 }}
-                checkedHabit={habit.done ? true : false}
+                checkedHabit={() => {
+                  return habit.done ? true : false
+                }}
               ></ion-icon>
             </Check>
           </HabitBox>
