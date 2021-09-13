@@ -6,6 +6,8 @@ import "react-circular-progressbar/dist/styles.css";
 import DailyProgressContext from "../contexts/DailyProgressContext";
 
 export default function Bottom() {
+  const { dailyProgress } = useContext(DailyProgressContext);
+
   return (
     <BottomContainer>
       <BottomBox>
@@ -15,7 +17,7 @@ export default function Bottom() {
         <Link to="/today">
           <Today>
             <CircularProgressbar
-              value={50}
+              value={dailyProgress}
               text={"Hoje"}
               background
               backgroundPadding={6}

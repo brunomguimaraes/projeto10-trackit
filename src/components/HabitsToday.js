@@ -3,10 +3,15 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
-import { getTodayHabits } from "../services/API";
+import {
+  getTodayHabits,
+  postCheckHabit,
+  postUncheckHabit,
+} from "../services/API";
 import UserContext from "../contexts/UserContext";
+import DailyProgressContext from "../contexts/DailyProgressContext";
 
-export default function HabitsToday({ setDailyProgress }) {
+export default function HabitsToday() {
   const day = dayjs().date();
   const month = dayjs().month() + 1;
   const year = dayjs().year();
@@ -43,8 +48,12 @@ export default function HabitsToday({ setDailyProgress }) {
 
   const today = `${weekday}, ${day}/${month}/${year}`;
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
+
+  const {dailyProgress, setDailyProgress} = useContext(DailyProgressContext);
+
   const [todayHabits, setTodayHabits] = useState([]);
+  const [checkedHabits, setCheckedHabits] = useState([]);
 
   const config = {
     headers: {
@@ -55,28 +64,66 @@ export default function HabitsToday({ setDailyProgress }) {
   useEffect(() => {
     getTodayHabits(config).then((res) => {
       setTodayHabits(res.data);
-      console.log(res.data);
     });
   }, []);
-  console.log(today, "hoje");
+
+  function checkHabit(habit) {
+    calculateDailyProgress();
+    if (checkedHabits.includes(habit.id)) {
+      postUncheckHabit(habit.id, config).then(() => {
+        habit.currentSequence--;
+        const filteredHabits = checkedHabits.filter((h) => h !== habit.id);
+        setCheckedHabits(filteredHabits);
+        console.log('caiu no uncheck')
+      });
+    } else {
+      postCheckHabit(habit.id, config).then(() => {
+        habit.currentSequence++;
+        setCheckedHabits([...checkedHabits, habit.id]);
+        console.log('caiu no check')
+      });
+    }
+    if (habit.currentSequence > habit.highestSequence) {
+      habit.highestSequence = habit.currentSequence;
+    }
+    console.log("checked", checkedHabits);
+    console.log("today", todayHabits);
+  }
+
+  function calculateDailyProgress() {
+    const total = ((checkedHabits.length / todayHabits.length) * 100)
+    setDailyProgress(total);
+    console.log("progress", dailyProgress);
+  }
 
   return (
     <>
       <Header />
       <Container>
         <TodayHeader>
-          <Weekday>{`${weekday}, ${day}/${month}/${year}`}</Weekday>
-          <TodayMessage>{"Nenhum hábito concluído ainda"}</TodayMessage>
+          <Weekday>{today}</Weekday>
+          <TodayMessage>
+            {(checkedHabits.length === 0) && (dailyProgress < 1)
+              ? "Nenhum hábito concluído ainda"
+              : `${dailyProgress}% dos hábitos concluídos`}
+          </TodayMessage>
         </TodayHeader>
-        {todayHabits.map((habit) => (
-          <HabitBox>
+        {todayHabits.map((habit, index) => (
+          <HabitBox key={index}>
             <Info>
               <HabitName>{habit.name}</HabitName>
               <Sequency>Sequência atual: {habit.currentSequence} dias</Sequency>
               <Record>Seu recorde: {habit.highestSequence} dias</Record>
             </Info>
             <Check>
-              <ion-icon name="checkbox"></ion-icon>
+              <ion-icon
+                name="checkbox"
+                onClick={() => {
+                  checkHabit(habit);
+                  // calculateDailyProgress();
+                }}
+                checkedHabit={habit.done ? true : false}
+              ></ion-icon>
             </Check>
           </HabitBox>
         ))}
@@ -145,8 +192,9 @@ const Record = Sequency;
 
 const Check = styled.div`
   margin-right: 8px;
+
   ion-icon {
-    color: #ebebeb;
+    color: ${(props) => (props.checkedHabit ? "#8fc549" : "#ebebeb")};
     border-radius: 5px;
     width: 69px;
     height: 69px;

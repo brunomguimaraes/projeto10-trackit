@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
 import { Link, useHistory } from "react-router-dom";
 import Loader from "react-loader-spinner";
 import { postLogin } from "../services/API";
+import UserContext from "../contexts/UserContext";
 
-export default function LoginPage({ setUser }) {
+export default function LoginPage() {
+  const { setUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,7 +27,7 @@ export default function LoginPage({ setUser }) {
       .then((res) => {
         setUser(res.data);
         console.log("resposta do login", res.data);
-        setLoading(false);        
+        setLoading(false);
         history.push("/today");
       })
       .catch(() => {

@@ -4,7 +4,11 @@ import styled from "styled-components";
 import Bottom from "./Bottom";
 import Header from "./Header";
 import UserContext from "../contexts/UserContext";
-import { postCreateHabit, getListHabits, deleteHabit } from "../services/API";
+import {
+  postCreateHabit,
+  getListHabits,
+  deleteDeleteHabit,
+} from "../services/API";
 import { useHistory } from "react-router-dom";
 
 export default function Habits() {
@@ -53,7 +57,7 @@ export default function Habits() {
 
   const history = useHistory();
 
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   const config = {
     headers: {
@@ -78,14 +82,16 @@ export default function Habits() {
       day.isSelected = false;
       const filteredDays = selectedDays.filter((d) => d !== day.id);
       setSelectedDays(filteredDays);
+      console.log("removeu");
     } else {
       day.isSelected = true;
       setSelectedDays([...selectedDays, day.id]);
+      console.log("adicinou");
     }
-    console.log(selectedDays)
+    console.log(selectedDays);
   }
 
-  function CreateHabit(event) {
+  function createHabit(event) {
     event.preventDefault();
     setLoading(true);
 
@@ -119,11 +125,11 @@ export default function Habits() {
       });
   }
 
-  function DeleteHabit(habitId) {
-    const answer = window.confirm("Deseja realmente deletar este hábito?");
+  function deleteHabit(habitId) {
+    const answer = window.confirm("Deseja realmente excluir este hábito?");
 
     if (answer) {
-      deleteHabit(habitId, config).then(() => {
+      deleteDeleteHabit(habitId, config).then(() => {
         getListHabits(config).then((res) => setUserHabits(res.data));
       });
       history.push("/habits");
@@ -141,7 +147,7 @@ export default function Habits() {
           </Top>
           <HabitCreationForm
             startHabitCreation={startHabitCreation}
-            onSubmit={CreateHabit}
+            onSubmit={createHabit}
           >
             <HabitNameInput
               type="text"
@@ -156,9 +162,7 @@ export default function Habits() {
                 <CreateHabitDay
                   key={day.id}
                   onClick={() => selectDay(day)}
-                  selectedDay={selectedDays.find((d) =>
-                    d === day.id ? true : false
-                  )}
+                  selectedDay={selectedDays.includes(day.id)}
                 >
                   {day.name}
                 </CreateHabitDay>
@@ -189,20 +193,15 @@ export default function Habits() {
           </HabitCreationForm>
 
           {userHabits.length !== 0 ? (
-            userHabits.map((habit) => (
-              <SingleHabitBox habitId={habit.id}>
-                <Icon onClick={() => DeleteHabit(habit.id)}>
+            userHabits.map((habit, index) => (
+              <SingleHabitBox habitId={habit.id} key={index}>
+                <Icon onClick={() => deleteHabit(habit.id)}>
                   <ion-icon name="trash-outline"></ion-icon>
                 </Icon>
                 <Name>{habit.name}</Name>
                 <HabitWeekdays>
                   {days.map((day, index) => (
-                    <Day
-                      key={index}
-                      selectedDay={
-                        habit.days.find((id) => id === day.id) ? true : false
-                      }
-                    >
+                    <Day key={index} selectedDay={habit.days.includes(day.id)}>
                       {" "}
                       {day.name}{" "}
                     </Day>
@@ -405,7 +404,6 @@ const SingleHabitBox = styled.div`
   background-color: #ffffff;
   margin-top: 20px;
   margin-bottom: 10px;
-  display: ${1 > 0 ? "inherit" : "none"};
   position: relative;
 `;
 const Name = styled.p`

@@ -22,7 +22,7 @@ function getListHabits(config) {
   return promise;
 }
 
-function deleteHabit(habitId, config) {
+function deleteDeleteHabit(habitId, config) {
   const promise = axios.delete(`${BASE_URL}/habits/${habitId}`, config);
   return promise;
 }
@@ -31,8 +31,14 @@ function getTodayHabits(config) {
   const promise = axios.get(`${BASE_URL}/habits/today`, config);
   return promise;
 }
+
 function postCheckHabit(habitId, config) {
-  const promise = axios.get(`${BASE_URL}/habits/${habitId}/check`,"", config);
+  const promise = axios.post(`${BASE_URL}/habits/${habitId}/check`,"", config);
+  return promise;
+}
+
+function postUncheckHabit(habitId, config) {
+  const promise = axios.post(`${BASE_URL}/habits/${habitId}/uncheck`,"", config);
   return promise;
 }
 
@@ -41,6 +47,8 @@ export {
   postSignUp,
   postCreateHabit,
   getListHabits,
-  deleteHabit,
+  deleteDeleteHabit,
   getTodayHabits,
+  postCheckHabit,
+  postUncheckHabit  
 };
